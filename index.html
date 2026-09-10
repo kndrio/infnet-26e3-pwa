@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <link rel="manifest" href="app.webmanifest" />
+    <title>Nosso Primeiro PWA</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header>
+      <h1>Nosso Primeiro WPA!</h1>
+      <p id="status">Verificando suporte...</p>
+      <button id="installButton" class="btn-install" hidden>Instalar WPA </button>
+    </header>
+    <main>
+      <form id="noteForm" class="note-form">
+        <input
+          id="noteTitle"
+          type="text"
+          placeholder="Título da nota"
+          required
+        />
+        <textarea
+          id="noteContent"
+          placeholder="Conteúdo (opcional)"
+          rows="2"
+        ></textarea>
+        <button type="submit">Salvar nota</button>
+      </form>
+      <ul id="notesList" class="notes-list"></ul>
+    </main>
+    <!--Biblioteca Dexie - wrapper para IndexedDB-->
+    <script src="https://unpkg.com/dexie@latest/dist/dexie.js"></script>
+    <script src="db.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>

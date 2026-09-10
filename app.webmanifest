@@ -1,0 +1,8 @@
+{
+  "name": "Meu primeiro WPA",
+  "short_name": "Meu1WPA",
+  "start_url": "/index.html",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#028090"
+}
