@@ -114,3 +114,54 @@ notesList.addEventListener("click", async (event) => {
 
 //Carrega as notas salvas
 renderNotes();
+
+
+/**
+ * Botões de debug do ChannelMessage  
+ * Lida com os events do DOM 
+ *  
+ */
+
+//Checar versão do cache
+const checkVersionButton = document.getElementById("checkVersionButton");
+if(checkVersionButton) {
+  checkVersionButton.addEventListener("click", async () => {
+    if(!navigator.serviceWorker.controller) {
+      console.log("Nenhum SW ativo para enviar a mensagem");
+      return;
+    };
+    
+    const channel = new MessageChannel();
+    channel.port1.onmessage = (event) => {
+      console.log(`Versão do cache (SW): ${event.data.version}`);
+    };
+
+    navigator.serviceWorker.controller.postMessage(
+      { action: "checkVersion" },
+      [channel.port2]
+    );
+
+  });
+}
+
+//Limpar cache de runtime
+const clearCacheButton = document.getElementById("clearCacheButton");
+if(clearCacheButton) {
+  clearCacheButton.addEventListener("click", async () => {
+    if(!navigator.serviceWorker.controller) {
+      console.log("Nenhum SW ativo para enviar a mensagem");
+      return;
+    };
+    
+    const channel = new MessageChannel();
+    channel.port1.onmessage = (event) => {
+      console.log(`Cache de runtime limpo: ${event.data.cleared} item(ns) removido(s).`);
+    };
+
+    navigator.serviceWorker.controller.postMessage(
+      { action: "clearRuntimeCache" },
+      [channel.port2]
+    );
+
+  });
+}

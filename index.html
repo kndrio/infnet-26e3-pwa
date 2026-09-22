@@ -31,10 +31,15 @@
       </form>
       <ul id="notesList" class="notes-list"></ul>
     </main>
+    <div id="debug-action">
+      <button id="checkVersionButton">Ver versão do cache (SW)</button>
+      <button id="clearCacheButton">Limpar cache de runtime</button>
+    </div>
     <!--Biblioteca Dexie - wrapper para IndexedDB-->
     <script src="https://unpkg.com/dexie@latest/dist/dexie.js"></script>
     <script src="db.js"></script>
     <!--script src="db-nativo.js"></script-->
     <script src="app.js"></script>
+    <script src=" https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.8.3/angular.min.js"></script>
   </body>
 </html>

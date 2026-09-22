@@ -33,3 +33,5 @@ async function updateNote(id, changes) {
 async function deleteNote(id) {
     return db.notes.delete(id);
 }
+
+//Outbox Lista de request após o retorno de Network-
