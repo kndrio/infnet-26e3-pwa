@@ -34,4 +34,27 @@ async function deleteNote(id) {
     return db.notes.delete(id);
 }
 
-//Outbox Lista de request após o retorno de Network-
+
+/**
+ * Background Sync - OUTBOX QUANDO OFFLINE
+ **/
+
+db.version(2).stores({
+    notes: '++id, title, content',
+    outbox: '++id, payload, createdAt', //Fila (outbox) pendentes de sincronização
+})
+
+//Outbox Lista de request após o retorno de Network
+async function outboxAdd(payload){
+    return db.outbox.add(
+        {payload, createdAt: new Date().toISOString()}
+    )
+}
+
+async function outboxGetAll() {
+    return db.outbox.toArray();
+}
+
+async function outboxRemove(id) {
+    return db.outbox.delete(id);
+}

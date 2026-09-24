@@ -3,11 +3,13 @@
  */
 
 const status = document.getElementById("status");
+let swRegistration;
 
 if ("serviceWorker" in navigator) {
   navigator.serviceWorker
     .register("sw.js")
-    .then(() => {
+    .then((registration) => {
+      swRegistration = registration;
       status.textContent = "Service Worker registrado com sucesso!";
     })
     .catch((err) => {
@@ -15,6 +17,18 @@ if ("serviceWorker" in navigator) {
     });
 } else {
   status.textContent = "Este navegador não suporta Service Worker";
+}
+
+/**
+ * Background Sync - OUTBOX QUANDO OFFLINE
+ **/
+
+if("serviceWorker" in navigator) {
+  navigator.serviceWorker.addEventListener("message", (event) => {
+    if(event.data?.type == "sync-success"){
+      updateSyncBadge();
+    }
+  }) 
 }
 
 /**
@@ -77,15 +91,17 @@ noteForm.addEventListener("submit", async (e) => {
 
   const title = document.getElementById("noteTitle").value;
   const content = document.getElementById("noteContent").value.trim();
-
-
   if(!title) return;
 
-  await addNote(title, content);
+  //ADICIONA NO INDEXEDDB
+  const noteId = await addNote(title, content);
+
+  await queueForSync({id: noteId, title, content})
+  
   noteForm.reset();
   await renderNotes();
 
-  noteForm.reset();
+
 });
 
 //Edit/remove
@@ -165,3 +181,82 @@ if(clearCacheButton) {
 
   });
 }
+
+/* 
+* Background Sync - status de conexão e fila de sincronização 
+**/
+
+async function queueForSync(payload) {
+  await outboxAdd(payload);
+  updateSyncBadge();
+
+  if(navigator.onLine){
+    await trySync();
+  }else {
+    console.log(swRegistration);
+    if(swRegistration && "sync" in swRegistration) {
+      try {
+        await swRegistration.sync.register("sync-notes")
+      } catch (err) {
+        console.warn("Background Sync indisponível.")
+      }
+    }
+  }
+}
+
+async function trySync() {
+  const pending = await outboxGetAll();
+
+  for (const item of pending){
+    try {
+      const response = await fetch("https://jsonplaceholder.typicode.com/posts", {
+        method : "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(item.payload),
+      });
+
+      if(response.ok){
+        await outboxRemove(item.id);
+        await notifyClients({ type: "sync-success", noteId: item.payload.id});
+      }
+      
+    } catch (err) {
+      break;
+    }
+  }
+  updateSyncBadge();
+}
+
+window.addEventListener("online", () => {
+  setOfflineBanner(false);
+  trySync();
+})
+
+window.addEventListener("offline", () => {
+  setOfflineBanner(true);
+})
+
+async function updateSyncBadge() {
+  const pending = await outboxGetAll;
+  const badge = document.getElementById("syncBadge");
+
+  if(!badge) return;
+
+  if(pending.length === 0 ){
+    badge.hidden = true;
+  } else{
+    badge.hidden = false;
+    badge.textContent = `${pending.length} nota(s) aguardando sincronização.`
+  }
+}
+
+function setOfflineBanner(isOffline){
+  console.log(isOffline);
+  const banner = document.getElementById("offlineBanner");
+  if (!banner) return;
+  banner.hidden = !isOffline;
+}
+
+console.log(navigator);
+setOfflineBanner(!navigator.onLine);
+updateSyncBadge();

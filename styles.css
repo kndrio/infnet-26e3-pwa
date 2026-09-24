@@ -97,3 +97,52 @@ body {
   font-size: 0.85rem;
   margin-right: 0.75rem;
 }
+
+
+/* 
+* Background Sync - status de conexão e fila de sincronização 
+**/
+
+.offline-banner {
+  background: #f4a300;
+  color: var(--primary-dark);
+  padding: 0.6rem 1rem;
+  border-radius: 6px;
+  max-width: 420px;
+  margin: 0.5rem 0;
+  font-size: 0.9rem;
+}
+
+.sync-badge {
+  display: inline-block;
+  background: #fff3d9;
+  color: var(--primary-dark);
+  border: 1px solid #f4a300;
+  padding: 0.3rem 0.7rem;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  margin: 0.5rem 0;
+}
+
+.debug-actions {
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: 1px dashed #cfe0df;
+  display: flex;
+  gap: 0.5rem;
+}
+
+.debug-actions button {
+  background: none;
+  border: 1px solid var(--teal);
+  color: var(--teal);
+  padding: 0.4rem 0.8rem;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+
+.debug-actions button:hover {
+  background: var(--teal);
+  color: white;
+}

@@ -1,7 +1,8 @@
 //ServiceWork = Proxy
-const CACHE_VERSION = "v4";
+const CACHE_VERSION = "v6";
 const CACHE_NAME = `app-shell-${CACHE_VERSION}`;
 const RUNTIME_CACHE_NAME = `runtime-${CACHE_VERSION}`;
+const OUTBOX_STORE = "outbox"; //Usado pelo Background Sync
 
 const ASSETS = [
     "/",
@@ -19,6 +20,9 @@ const ASSETS = [
     "/icons/icon-384x384.png",
     "/icons/icon-512x512.png",
   ];
+
+  //Import de Scripts que serão necessários também pelo SW
+  importScripts("cdn/dexie.js", "db.js");
 
 //Listener para Evento install
 self.addEventListener("install", (event) => {
@@ -138,3 +142,41 @@ self.addEventListener("message", (event) => {
   }
 
 });
+
+
+/**
+ * Background Sync - OUTBOX QUANDO OFFLINE
+ **/
+
+self.addEventListener("sync", (event) => {
+  if(event.tag == "sync-notes"){
+    event.waitUntil(syncOutbox());
+  }
+})
+
+async function syncOutbox() {
+  const pending = await outboxGetAll();
+
+  for (const item of pending){
+    try {
+      const response = await fetch("https://jsonplaceholder.typicode.com/posts", {
+        method : "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(item.payload),
+      });
+
+      if(response.ok){
+        await outboxRemove(item.id);
+        await notifyClients({ type: "sync-success", noteId: item.payload.id});
+      }
+      
+    } catch (err) {
+      break;
+    }
+  }
+}
+
+async function notifyClients(message) {
+  const clients = await self.clients.matchAll();
+  clients.forEache ((client) = client.postMessage(message));
+}

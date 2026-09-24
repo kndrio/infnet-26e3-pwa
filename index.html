@@ -14,6 +14,10 @@
       <p id="status">Verificando suporte...</p>
       <button id="installButton" class="btn-install" hidden>Instalar WPA </button>
     </header>
+    <div id="offlineBanner" class="offline-banner" hidden>
+      Você está offline. Suas notas continuam sendo salvas localmente e serão sincronizadas quando a conexão voltar.
+    </div>
+    <p id="syncBadge" class="syncBadge" hidden></p>
     <main>
       <form id="noteForm" class="note-form">
         <input
@@ -21,11 +25,13 @@
           type="text"
           placeholder="Título da nota"
           required
+          name="title"
         />
         <textarea
           id="noteContent"
           placeholder="Conteúdo (opcional)"
           rows="2"
+          name="content"
         ></textarea>
         <button type="submit">Salvar nota</button>
       </form>
@@ -36,7 +42,7 @@
       <button id="clearCacheButton">Limpar cache de runtime</button>
     </div>
     <!--Biblioteca Dexie - wrapper para IndexedDB-->
-    <script src="https://unpkg.com/dexie@latest/dist/dexie.js"></script>
+    <script src="cdn/dexie.js"></script>
     <script src="db.js"></script>
     <!--script src="db-nativo.js"></script-->
     <script src="app.js"></script>
