@@ -217,7 +217,6 @@ async function trySync() {
 
       if(response.ok){
         await outboxRemove(item.id);
-        await notifyClients({ type: "sync-success", noteId: item.payload.id});
       }
       
     } catch (err) {
@@ -237,7 +236,7 @@ window.addEventListener("offline", () => {
 })
 
 async function updateSyncBadge() {
-  const pending = await outboxGetAll;
+  const pending = await outboxGetAll();
   const badge = document.getElementById("syncBadge");
 
   if(!badge) return;
@@ -251,12 +250,10 @@ async function updateSyncBadge() {
 }
 
 function setOfflineBanner(isOffline){
-  console.log(isOffline);
   const banner = document.getElementById("offlineBanner");
   if (!banner) return;
   banner.hidden = !isOffline;
 }
 
-console.log(navigator);
 setOfflineBanner(!navigator.onLine);
 updateSyncBadge();

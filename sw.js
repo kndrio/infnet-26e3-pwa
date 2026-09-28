@@ -22,7 +22,7 @@ const ASSETS = [
   ];
 
   //Import de Scripts que serão necessários também pelo SW
-  importScripts("cdn/dexie.js", "db.js");
+  importScripts("/cdn/dexie.js", "db.js");
 
 //Listener para Evento install
 self.addEventListener("install", (event) => {
@@ -178,5 +178,5 @@ async function syncOutbox() {
 
 async function notifyClients(message) {
   const clients = await self.clients.matchAll();
-  clients.forEache ((client) = client.postMessage(message));
+  clients.forEach ((client) => client.postMessage(message));
 }
