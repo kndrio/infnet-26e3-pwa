@@ -193,7 +193,6 @@ async function queueForSync(payload) {
   if(navigator.onLine){
     await trySync();
   }else {
-    console.log(swRegistration);
     if(swRegistration && "sync" in swRegistration) {
       try {
         await swRegistration.sync.register("sync-notes")
@@ -257,3 +256,48 @@ function setOfflineBanner(isOffline){
 
 setOfflineBanner(!navigator.onLine);
 updateSyncBadge();
+
+
+/**
+ * Notificações - Solicitação de permissão do usuário
+ */
+
+  const enableNotificationsButton = document.getElementById("enableNotificationsButton");
+  const notificationStatus = document.getElementById("notificationStatus");
+
+  function updateNotificationStatus() {
+    if(!notificationStatus) return;
+
+    if( !("Notification" in window) ){
+      notificationStatus.textContent = "Este navegador não suporta notificações.";
+      if (enableNotificationsButton) enableNotificationsButton.hidden = true;
+      return;
+    }
+
+    if(Notification.permission === "granted"){
+      notificationStatus.textContent = "Notificações ativadas - você será avisado das novidades.";
+      if (enableNotificationsButton) enableNotificationsButton.hidden = true;
+    } else if (Notification.permission === "denied") {
+      notificationStatus.textContent = "Notificações bloqueadas nas configurações do navegador.";
+      if (enableNotificationsButton) enableNotificationsButton.hidden = true;
+    } else {
+      notificationStatus.textContent = "Notificações desativadas.";
+      if (enableNotificationsButton) enableNotificationsButton.hidden = false;
+    }
+
+    if(enableNotificationsButton){
+      enableNotificationsButton.addEventListener("click", async () => {
+        const permission = await Notification.requestPermission();
+        updateNotificationStatus();
+
+        if (permission === "granted" && swRegistration) {
+          swRegistration.showNotification("Notificações ativadas!", {
+            body: "Você vai ser avisado das últimas novidades.",
+            icon: "icons/icon-192x192.png"
+          });
+        }
+      });
+    }
+  }
+
+  updateNotificationStatus();

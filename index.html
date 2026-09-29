@@ -37,10 +37,18 @@
       </form>
       <ul id="notesList" class="notes-list"></ul>
     </main>
+    <!-- Notificações -->
+    <div id="notification-actions" class="notification-actions">
+      <button type="button" id="enableNotificationsButton">Ativar notificações</button>
+      <p id="notificationStatus" class="status"></p>
+    </div>
+
+    <!-- Debug Install/Cache SW -->
     <div id="debug-action">
       <button id="checkVersionButton">Ver versão do cache (SW)</button>
       <button id="clearCacheButton">Limpar cache de runtime</button>
     </div>
+
     <!--Biblioteca Dexie - wrapper para IndexedDB-->
     <script src="cdn/dexie.js"></script>
     <script src="db.js"></script>

@@ -146,3 +146,27 @@ body {
   background: var(--teal);
   color: white;
 }
+
+/**
+ * Notificações
+ */
+
+.notification-actions {
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: 1px dashed #cfe0df;
+}
+
+.notification-actions button {
+  background: var(--teal);
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.notification-actions button:hover {
+  background: var(--primary-dark);
+}

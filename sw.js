@@ -1,5 +1,5 @@
 //ServiceWork = Proxy
-const CACHE_VERSION = "v6";
+const CACHE_VERSION = "v10";
 const CACHE_NAME = `app-shell-${CACHE_VERSION}`;
 const RUNTIME_CACHE_NAME = `runtime-${CACHE_VERSION}`;
 const OUTBOX_STORE = "outbox"; //Usado pelo Background Sync
@@ -168,6 +168,7 @@ async function syncOutbox() {
       if(response.ok){
         await outboxRemove(item.id);
         await notifyClients({ type: "sync-success", noteId: item.payload.id});
+        await notifyTaskSynced(item.payload)
       }
       
     } catch (err) {
@@ -180,3 +181,51 @@ async function notifyClients(message) {
   const clients = await self.clients.matchAll();
   clients.forEach ((client) => client.postMessage(message));
 }
+
+/**
+ * Notificações - Lidar com as push notifications
+ */
+
+async function notifyTaskSynced(payload) {
+  try{
+    await self.registration.showNotification("Feed atualizado", {
+      body: `"${payload.title}" foi sincronizado com sucesso.`,
+      icon: "icons/icon-192x192.png",
+      badge: "icons/icon-72x72.png",
+      tag: `sync-${payload.id}`,
+    })
+  }catch (err) {
+    //Sem permissão ou navegadopr sem suporte
+  }
+}
+
+self.addEventListener("notificationclick", (event) => {
+  event.notification.close();
+  event.waitUntil(
+    self.clients.matchAll({type: "window'"}).then((clientsList) => {
+      if (clientsList.length > 0) {
+        return clientsList[0].focus();
+      }
+      return self.clients.openWindow("/");
+    })
+  );
+});
+
+self.addEventListener("push", (event) => {
+  let data = { title: "Nova notificação", body: "Você tem uma atualização."};
+
+  try{
+    if(event.data) data = event.data.json();
+  } catch (err) {
+    if(event.data) data.body = event.data.text();
+  }
+
+
+  event.waitUntil(
+    self.registration.showNotification(data.title || "Notificação" , {
+      body: data.body,
+      icon: "icons/icon-192x192.png",
+      badge: "icons/icon-72x72.png",      
+    })
+  );
+});
