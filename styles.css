@@ -170,3 +170,82 @@ body {
 .notification-actions button:hover {
   background: var(--primary-dark);
 }
+
+/*
+* Logins
+*/
+
+.main-nav {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #cfe0df;
+  margin-bottom: 0.5rem;
+}
+.main-nav[hidden] {
+  display: none;
+}
+
+.nav-btn {
+  background: none;
+  border: 1px solid var(--teal);
+  color: var(--teal);
+  padding: 0.4rem 0.9rem;
+  border-radius: 999px;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.nav-btn.active {
+  background: var(--teal);
+  color: white;
+}
+
+.logged-user {
+  margin-left: auto;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.btn-logout {
+  background: none;
+  border: none;
+  color: var(--muted);
+  text-decoration: underline;
+  cursor: pointer;
+  font-size: 0.85rem;
+}
+
+.view {
+  max-width: 420px;
+}
+
+.hint {
+  color: var(--muted);
+  font-size: 0.85rem;
+  max-width: 420px;
+}
+
+.login-form {
+  display: flex;
+  gap: 0.5rem;
+  max-width: 420px;
+}
+
+.login-form input {
+  flex: 1;
+  padding: 0.5rem;
+  border: 1px solid #cfe0df;
+  border-radius: 6px;
+  font-family: inherit;
+}
+
+.login-form button {
+  background: var(--teal);
+  color: white;
+  border: none;
+  padding: 0.6rem 1.1rem;
+  border-radius: 8px;
+  cursor: pointer;
+}

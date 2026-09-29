@@ -18,6 +18,20 @@
       Você está offline. Suas notas continuam sendo salvas localmente e serão sincronizadas quando a conexão voltar.
     </div>
     <p id="syncBadge" class="syncBadge" hidden></p>
+
+    <section id="view-login" class="view">
+      <h2>Entrar</h2>
+      <p class="hint">
+        Este projeto ainda não tem backend, então isso aqui NÃO é login de
+        verdade — só guarda seu nome no localStorage do navegador pra
+        simular uma sessão e liberar a navegação entre Home e Dashboard.
+      </p>
+      <form id="loginForm" class="login-form">
+        <input id="loginName" type="text" placeholder="Seu nome" required />
+        <button type="submit">Entrar</button>
+      </form>
+    </section>
+
     <main>
       <form id="noteForm" class="note-form">
         <input
