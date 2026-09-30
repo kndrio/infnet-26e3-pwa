@@ -284,20 +284,20 @@ updateSyncBadge();
       notificationStatus.textContent = "Notificações desativadas.";
       if (enableNotificationsButton) enableNotificationsButton.hidden = false;
     }
+  }
 
-    if(enableNotificationsButton){
-      enableNotificationsButton.addEventListener("click", async () => {
-        const permission = await Notification.requestPermission();
-        updateNotificationStatus();
+  if(enableNotificationsButton){
+    enableNotificationsButton.addEventListener("click", async () => {
+      const permission = await Notification.requestPermission();
+      updateNotificationStatus();
 
-        if (permission === "granted" && swRegistration) {
-          swRegistration.showNotification("Notificações ativadas!", {
-            body: "Você vai ser avisado das últimas novidades.",
-            icon: "icons/icon-192x192.png"
-          });
-        }
-      });
-    }
+      if (permission === "granted" && swRegistration) {
+        swRegistration.showNotification("Notificações ativadas!", {
+          body: "Você vai ser avisado das últimas novidades.",
+          icon: "icons/icon-192x192.png"
+        });
+      }
+    });
   }
 
   updateNotificationStatus();

@@ -1,5 +1,5 @@
 //ServiceWork = Proxy
-const CACHE_VERSION = "v10";
+const CACHE_VERSION = "v11"; 
 const CACHE_NAME = `app-shell-${CACHE_VERSION}`;
 const RUNTIME_CACHE_NAME = `runtime-${CACHE_VERSION}`;
 const OUTBOX_STORE = "outbox"; //Usado pelo Background Sync
@@ -39,13 +39,13 @@ self.addEventListener("install", (event) => {
  */
 self.addEventListener("activate", (event) => {
   event.waitUntil(
-    caches.keys().then((cacheNames) => 
+    caches.keys().then((cacheNames) =>
       Promise.all(
         cacheNames
         .filter((name) => name !== CACHE_NAME && name!== RUNTIME_CACHE_NAME)
         .map((name) => caches.delete(name))
       )
-    )
+    ).then(() => self.clients.claim())
   );
 });
 
@@ -202,7 +202,7 @@ async function notifyTaskSynced(payload) {
 self.addEventListener("notificationclick", (event) => {
   event.notification.close();
   event.waitUntil(
-    self.clients.matchAll({type: "window'"}).then((clientsList) => {
+    self.clients.matchAll({type: "window"}).then((clientsList) => {
       if (clientsList.length > 0) {
         return clientsList[0].focus();
       }
